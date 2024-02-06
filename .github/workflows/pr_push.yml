@@ -8,7 +8,7 @@ concurrency:
 
 permissions:
   contents: read
-  security-events: read-all
+  security-events: read
 
 jobs:
     FastBuild:
