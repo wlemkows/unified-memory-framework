@@ -88,6 +88,6 @@ jobs:
     CodeQL:
         permissions:
           contents: read
-          security-events: write
+          security-events: read
         needs: [Build]
         uses: ./.github/workflows/codeql.yml
