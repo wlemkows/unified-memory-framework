@@ -8,7 +8,7 @@ concurrency:
 
 permissions:
   contents: read
-  security-events: read
+  security-events: read-all
 
 jobs:
     FastBuild:
@@ -87,8 +87,8 @@ jobs:
         needs: [Build]
         uses: ./.github/workflows/benchmarks.yml
     CodeQL:
-        permissions:
-          contents: read
-          security-events: write
+        #permissions:
+        #  contents: read
+        #  security-events: write
         needs: [Build]
         uses: ./.github/workflows/codeql.yml
