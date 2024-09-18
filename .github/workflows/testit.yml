@@ -26,11 +26,6 @@ jobs:
             repository: 'oneapi-src/unified-memory-framework'
             fetch-depth: 0
 
-      - name: Publish commit hash
-        id: get_commit
-        run: |
-          echo "Used UMF commit hash: $(/usr/bin/git log -1 --format='%H')" >> $GITHUB_STEP_SUMMARY
-
       - name: UMF Build
         run: |
           mkdir build
@@ -48,17 +43,9 @@ jobs:
             -DUMF_TESTS_FAIL_ON_SKIP=ON
           make -j
 
-      - name: Cve bin tool
-        uses: intel/cve-bin-tool-action@main
-        with:
-          nvd_api_key: '${{ secrets.NVD_API_KEY }}'
-          sbom_type: spdx
-          sbom_format: json
-          build_command: cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DUMF_BUILD_SHARED_LIBRARY=ON -DUMF_BUILD_LEVEL_ZERO_PROVIDER=OFF -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON -DUMF_BUILD_TESTS=ON -DUMF_BUILD_EXAMPLES=ON -DUMF_BUILD_BENCHMARKS=ON -DUMF_BUILD_BENCHMARKS_MT=ON -DUMF_BUILD_GPU_TESTS=OFF -DUMF_TESTS_FAIL_ON_SKIP=ON; cmake --build ${{env.BUILD_DIR}} --config Release
-
-      - name: Cve bin tool - manually
+      - name: Cve bin tool - run manually
         run: |
-          cve-bin-tool ${{env.BUILD_DIR}}
+          cve-bin-tool ${{env.BUILD_DIR}} file -f pdf -o report.cve-bin
 
       - name: Check presence of libumf.*
         run: |
@@ -66,6 +53,14 @@ jobs:
             echo "libumf.* not found"
             exit 1
           fi
+
+      - name: Upload CVE report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cve-bin report
+          path: |
+            *.cve-bin
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         with:
