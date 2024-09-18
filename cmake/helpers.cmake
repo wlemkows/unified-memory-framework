@@ -232,6 +232,7 @@ function(add_umf_target_compile_options name)
             PRIVATE -fPIC
                     -Wall
                     -Wextra
+                    -Wno-dev
                     -Wpedantic
                     -Wempty-body
                     -Wunused-parameter
