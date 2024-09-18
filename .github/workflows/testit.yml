@@ -48,7 +48,7 @@ jobs:
 
       - name: Cve bin tool - run manually
         run: |
-          cve-bin-tool ${{env.BUILD_DIR}} file -f pdf -o report.cve-bin
+          cve-bin-tool ${{env.BUILD_DIR}} -f pdf -o report.cve-bin
 
       - name: Check presence of libumf.*
         run: |
