@@ -1,0 +1,59 @@
+name: UMF scans
+
+on:
+  workflow_dispatch:
+  schedule:
+    # At 8:00 on Sunday, UTC time.
+    - cron: 0 8 * * 0
+
+jobs:
+  build_linux:
+    name: UMF build - Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends --no-install-suggests ca-certificates make cmake libhwloc-dev \
+            libnuma-dev libtbb-dev libjemalloc-dev g++ git curl jq
+
+      - name: Checkout UMF
+        uses: actions/checkout@v4
+        with:
+            repository: 'oneapi-src/unified-memory-framework'
+            fetch-depth: 0
+
+      - name: Publish commit hash
+        id: get_commit
+        run: |
+          echo "Used UMF commit hash: $(/usr/bin/git log -1 --format='%H')" >> $GITHUB_STEP_SUMMARY
+
+      - name: UMF Build
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ \
+            -DUMF_BUILD_SHARED_LIBRARY=ON \
+            -DUMF_BUILD_LEVEL_ZERO_PROVIDER=ON \
+            -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON \
+            -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON \
+            -DUMF_BUILD_TESTS=ON \
+            -DUMF_BUILD_EXAMPLES=ON \
+            -DUMF_BUILD_BENCHMARKS=ON \
+            -DUMF_BUILD_BENCHMARKS_MT=ON \
+            -DUMF_BUILD_GPU_TESTS=OFF \
+            -DUMF_TESTS_FAIL_ON_SKIP=ON
+          make -j
+
+      - name: Check presence of libumf.*
+        run: |
+          if [ ! -f build/lib/libumf.* ]; then
+            echo "libumf.* not found"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-libumf
+          path: |
+            build/*
