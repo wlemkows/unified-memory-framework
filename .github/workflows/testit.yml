@@ -21,7 +21,7 @@ jobs:
             libnuma-dev libtbb-dev libjemalloc-dev g++ git curl jq
 
       - name: Install CVE bin
-        run: python3 -m pip install cve-bin-tool
+        run: python3 -m pip install cve-bin-tool reportlab
 
       - name: Checkout UMF
         uses: actions/checkout@v4
