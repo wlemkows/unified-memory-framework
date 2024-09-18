@@ -20,6 +20,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends --no-install-suggests ca-certificates make cmake libhwloc-dev \
             libnuma-dev libtbb-dev libjemalloc-dev g++ git curl jq
 
+      - name: Install CVE bin
+        run: python3 -m pip install cve-bin-tool
+
       - name: Checkout UMF
         uses: actions/checkout@v4
         with:
