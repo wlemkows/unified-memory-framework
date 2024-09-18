@@ -48,7 +48,7 @@ jobs:
 
       - name: Cve bin tool - run manually
         run: |
-          cve-bin-tool ${{env.BUILD_DIR}} -f pdf -o report.cve-bin
+          cve-bin-tool ${{env.BUILD_DIR}} -f pdf -o report.cve-bin --nvd-api-key ${{ secrets.NVD_API_KEY }}
 
       - name: Check presence of libumf.*
         run: |
