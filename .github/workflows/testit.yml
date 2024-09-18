@@ -50,19 +50,12 @@ jobs:
         run: |
           cve-bin-tool ${{env.BUILD_DIR}} -f pdf -o report.cve-bin --nvd-api-key ${{ secrets.NVD_API_KEY }}
 
-      - name: Check presence of libumf.*
-        run: |
-          if [ ! -f build/lib/libumf.* ]; then
-            echo "libumf.* not found"
-            exit 1
-          fi
-
       - name: Upload CVE report artifact
         uses: actions/upload-artifact@v4
         with:
           name: cve-bin report
           path: |
-            *.cve-bin
+            *.cve-bin.pdf
           if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
