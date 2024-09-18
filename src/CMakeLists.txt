@@ -35,7 +35,7 @@ if(UMF_BUILD_LEVEL_ZERO_PROVIDER AND (UMF_BUILD_GPU_TESTS
 
     FetchContent_GetProperties(level-zero-loader)
     if(NOT level-zero-loader_POPULATED)
-        FetchContent_Populate(level-zero-loader)
+        FetchContent_MakeAvailable(level-zero-loader)
     endif()
 
     set(LEVEL_ZERO_INCLUDE_DIRS
