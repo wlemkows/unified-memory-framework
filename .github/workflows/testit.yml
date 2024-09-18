@@ -56,6 +56,9 @@ jobs:
           sbom_format: json
           build_command: cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DUMF_BUILD_SHARED_LIBRARY=ON -DUMF_BUILD_LEVEL_ZERO_PROVIDER=OFF -DUMF_BUILD_LIBUMF_POOL_DISJOINT=ON -DUMF_BUILD_LIBUMF_POOL_JEMALLOC=ON -DUMF_BUILD_TESTS=ON -DUMF_BUILD_EXAMPLES=ON -DUMF_BUILD_BENCHMARKS=ON -DUMF_BUILD_BENCHMARKS_MT=ON -DUMF_BUILD_GPU_TESTS=OFF -DUMF_TESTS_FAIL_ON_SKIP=ON; cmake --build ${{env.BUILD_DIR}} --config Release
 
+      - name: Cve bin tool - manually
+        run: |
+          cve-bin-tool ${{env.BUILD_DIR}}
 
       - name: Check presence of libumf.*
         run: |
