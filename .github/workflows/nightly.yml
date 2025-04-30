@@ -7,16 +7,14 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
-env:
-  HOST_WORKDIR:   /home/runner/work/unified-memory-framework/unified-memory-framework
-  WORKDIR:        /unified-memory-framework
-
 permissions:
   contents: read
 
 env:
   BUILD_DIR : "${{github.workspace}}/build"
   INSTALL_DIR: "${{github.workspace}}/build/install"
+  HOST_WORKDIR: ${{github.workspace}}
+  WORKDIR: /unified-memory-framework
 
 jobs:
   fuzz-test:
@@ -61,7 +59,6 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} --verbose -j$(nproc)
 
-<<<<<<< HEAD
       - name: Run regular tests
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}} --output-on-failure -E "fuzz|test_init_teardown"
@@ -338,8 +335,6 @@ jobs:
       working-directory: ${{env.BUILD_DIR}}
       run: ctest -C ${{matrix.build_type}} --output-on-failure --test-dir test
 
-=======
->>>>>>> f14fad1 (Build UMF on Alpine image)
   L0:
     uses: ./.github/workflows/reusable_gpu.yml
     with:
@@ -373,14 +368,10 @@ jobs:
       pull-requests: write
     with:
       pr_no: '0'
-<<<<<<< HEAD
       bench_script_params: '--save Baseline_PVC'
 
   SYCL:
     uses: ./.github/workflows/reusable_sycl.yml
-=======
-      bench_script_params: '--save baseline'
-      upload_report: true
 
   alpine:
     name: Alpine
@@ -403,4 +394,3 @@ jobs:
     - name: Run UMF build on Alpine image
       run: |
         docker run --rm --name alpine_container -i -v $HOST_WORKDIR:$WORKDIR alpine_image $WORKDIR/.github/scripts/alpine_build.sh ${{matrix.build_type}}
->>>>>>> f14fad1 (Build UMF on Alpine image)

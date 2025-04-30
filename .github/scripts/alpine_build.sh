@@ -8,5 +8,6 @@
 set -e
 
 cd unified-memory-framework
+
 cmake -B build -DCMAKE_BUILD_TYPE=$1 -DUMF_BUILD_TESTS=ON -DUMF_BUILD_EXAMPLES=ON
 cmake --build build
