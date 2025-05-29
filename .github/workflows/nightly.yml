@@ -383,14 +383,15 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         fetch-depth: 0
 
     - name: Build Alpine image
       run: |
-        docker build . -f .github/docker/alpine-3.20.Dockerfile -t alpine_image
+        docker build . -f .github/docker/alpine-3.21.Dockerfile -t umf-alpine-3.21
 
     - name: Run UMF build on Alpine image
       run: |
-        docker run --rm --name alpine_container -i -v $HOST_WORKDIR:$WORKDIR alpine_image $WORKDIR/.github/scripts/alpine_build.sh ${{matrix.build_type}}
+        docker run --rm --name alpine_container -i -v $HOST_WORKDIR:$WORKDIR \
+        umf-alpine-3.21 $WORKDIR/.github/scripts/alpine_build.sh ${{matrix.build_type}}
